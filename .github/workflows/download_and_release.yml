@@ -21,34 +21,53 @@ jobs:
         run: |
           DATE=$(date +%Y-%m-%d)
           tar -czf "$DATE-latest-canonical.tar.gz" latest-canonical.json
+          tar -czf "latest-canonical.tar.gz" latest-canonical.json
           echo "TAR_FILE=$DATE-latest-canonical.tar.gz" >> $GITHUB_ENV
+          echo "LATEST_FILE=latest-canonical.tar.gz" >> $GITHUB_ENV
 
-      - name: Upload artifact
+      - name: Upload artifact (dated)
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.TAR_FILE }}
           path: ${{ env.TAR_FILE }}
 
+      - name: Upload artifact (latest)
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.LATEST_FILE }}
+          path: ${{ env.LATEST_FILE }}
+
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: release-${{ env.TAR_FILE }}
           release_name: Release ${{ env.TAR_FILE }}
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset
-        id: upload-release-asset
+      - name: Upload Release Asset (dated)
+        id: upload-release-asset-dated
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ env.TAR_FILE }}
           asset_name: ${{ env.TAR_FILE }}
+          asset_content_type: application/gzip
+
+      - name: Upload Release Asset (latest)
+        id: upload-release-asset-latest
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.LATEST_FILE }}
+          asset_name: ${{ env.LATEST_FILE }}
           asset_content_type: application/gzip
 
       - name: Print Download URL
@@ -56,5 +75,6 @@ jobs:
           REPO=${{ github.repository }}
           TAG=release-${{ env.TAR_FILE }}
           FILE=${{ env.TAR_FILE }}
-          echo "Download URL: https://github.com/$REPO/releases/download/$TAG/$FILE"
-          echo "Latest URL: https://github.com/$REPO/releases/latest/download/$FILE"
+          LATEST=latest-canonical.tar.gz
+          echo "Download URL (dated): https://github.com/$REPO/releases/download/$TAG/$FILE"
+          echo "Download URL (latest): https://github.com/$REPO/releases/latest/download/$LATEST"
