@@ -1,0 +1,60 @@
+name: Download and Release JSON
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight
+
+jobs:
+  download_and_release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download JSON
+        run: |
+          curl -o latest-canonical.json https://heisse-preise.io/data/latest-canonical.json
+
+      - name: Compress to tar.gz
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          tar -czf "$DATE-latest-canonical.tar.gz" latest-canonical.json
+          echo "TAR_FILE=$DATE-latest-canonical.tar.gz" >> $GITHUB_ENV
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.TAR_FILE }}
+          path: ${{ env.TAR_FILE }}
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: release-${{ env.TAR_FILE }}
+          release_name: Release ${{ env.TAR_FILE }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.TAR_FILE }}
+          asset_name: ${{ env.TAR_FILE }}
+          asset_content_type: application/gzip
+
+      - name: Print Download URL
+        run: |
+          REPO=${{ github.repository }}
+          TAG=release-${{ env.TAR_FILE }}
+          FILE=${{ env.TAR_FILE }}
+          echo "Download URL: https://github.com/$REPO/releases/download/$TAG/$FILE"
+          echo "Latest URL: https://github.com/$REPO/releases/latest/download/$FILE"
