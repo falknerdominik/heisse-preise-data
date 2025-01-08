@@ -26,35 +26,14 @@ import io
 import json
 
 url = 'https://github.com/falknerdominik/heisse-preise-data/releases/latest/download/latest-canonical.tar.gz'
-response = requests.get(url)
-
-if response.status_code == 200:
-    tar = tarfile.open(fileobj=io.BytesIO(response.content), mode='r:gz')
-    for member in tar.getmembers():
-        if member.name.endswith('.json'):
-            f = tar.extractfile(member)
-            data = json.load(f)
-            print(json.dumps(data, indent=2))
-else:
-    print("Failed to download the data.")
-```
-
-#### JavaScript Example (Node.js)
-```javascript
-import requests
-import tarfile
-import io
-import json
-
-url = 'https://github.com/falknerdominik/heisse-preise-data/releases/latest/download/latest-canonical.tar.gz'
 json_filename = 'latest-canonical.json'
 
 try:
-    // Download the tar.gz file into memory
+    # Download the tar.gz file into memory
     response = requests.get(url)
     response.raise_for_status()
 
-    // Open the tar.gz file directly from memory
+    # Open the tar.gz file directly from memory
     with tarfile.open(fileobj=io.BytesIO(response.content), mode='r:gz') as tar:
         # Extract and read the JSON file directly from the tar archive
         json_file = tar.extractfile(json_filename)
@@ -68,6 +47,33 @@ except requests.RequestException as e:
     print(f"Error downloading data: {e}")
 except (tarfile.TarError, json.JSONDecodeError) as e:
     print(f"Error processing files: {e}")
+
+```
+
+#### JavaScript Example (Node.js)
+```javascript
+const https = require('https');
+const fs = require('fs');
+const tar = require('tar');
+
+const url = 'https://github.com/falknerdominik/heisse-preise-data/releases/latest/download/latest-canonical.tar.gz';
+
+https.get(url, (response) => {
+    const file = fs.createWriteStream('latest-canonical.tar.gz');
+    response.pipe(file);
+    file.on('finish', () => {
+        file.close();
+        tar.x({ file: 'latest-canonical.tar.gz' }).then(() => {
+            fs.readFile('latest-canonical.json', (err, data) => {
+                if (err) throw err;
+                const jsonData = JSON.parse(data);
+                console.log(JSON.stringify(jsonData, null, 2));
+            });
+        });
+    });
+}).on('error', (err) => {
+    console.error(Error downloading data: ${err.message});
+});
 ```
 
 ## Contributing
