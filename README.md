@@ -50,11 +50,11 @@ url = 'https://github.com/falknerdominik/heisse-preise-data/releases/latest/down
 json_filename = 'latest-canonical.json'
 
 try:
-    # Download the tar.gz file into memory
+    // Download the tar.gz file into memory
     response = requests.get(url)
     response.raise_for_status()
 
-    # Open the tar.gz file directly from memory
+    // Open the tar.gz file directly from memory
     with tarfile.open(fileobj=io.BytesIO(response.content), mode='r:gz') as tar:
         # Extract and read the JSON file directly from the tar archive
         json_file = tar.extractfile(json_filename)
