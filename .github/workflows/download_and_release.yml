@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Download JSON
         run: |
@@ -26,13 +26,13 @@ jobs:
           echo "LATEST_FILE=latest-canonical.tar.gz" >> $GITHUB_ENV
 
       - name: Upload artifact (dated)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.TAR_FILE }}
           path: ${{ env.TAR_FILE }}
 
       - name: Upload artifact (latest)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.LATEST_FILE }}
           path: ${{ env.LATEST_FILE }}
