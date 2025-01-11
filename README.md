@@ -22,6 +22,11 @@ The data originates from:
 
 - No dependencies
 - Minimal python version should be 3.6
+- Package: https://pypi.org/project/heisse-preise-data
+
+```
+pip install heisse-preise-data
+```
 
 ```python
 from heisse_preise_data import download
