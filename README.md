@@ -1,5 +1,7 @@
 # Heisse Preise Data
 
+[![Download and Release JSON](https://github.com/falknerdominik/heisse-preise-data/actions/workflows/download_and_release.yml/badge.svg)](https://github.com/falknerdominik/heisse-preise-data/actions/workflows/download_and_release.yml)
+
 ## Project Overview
 This project provides compressed datasets derived from [heisse-preise.io](https://github.com/badlogic/heissepreise), offering an easy and efficient way to access up-to-date pricing data from supermarkets in Austria.
 
