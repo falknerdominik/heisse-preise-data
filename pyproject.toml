@@ -1,0 +1,44 @@
+[build-system]
+requires = [
+    "setuptools>=42",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "heisse-preise-data"
+version = "1.0.1"
+description = "A Python package for downloading and extracting the data from heisse-preise.io with no dependencies."
+authors = [
+    { name = "Dominik Falkner", email = "falkner.dominik@gmail.com" }
+]
+license = { file = "LICENSE" }
+readme = "README.md"
+keywords = ["data", "heisse-preise", "daily-updated", "compressed", "data-package"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+requires-python = ">=3.7"
+
+[project.urls]
+Homepage = "https://github.com/falknerdominik/heisse-preise-data"
+Documentation = "https://github.com/falknerdominik/heisse-preise-data"
+Repository = "https://github.com/falknerdominik/heisse-preise-data"
+
+[tool.setuptools]
+packages = ["heisse_preise_data"]
+
+[tool.setuptools.dynamic]
+readme = { file = "README.md" }

@@ -1,0 +1,15 @@
+{
+  "name": "Python Dev Container",
+  "image": "python:3.12",
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ]
+    }
+  },
+  "postCreateCommand": "pip install build && apt update && apt install -y twine"
+}

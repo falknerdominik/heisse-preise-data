@@ -18,6 +18,33 @@ The data originates from:
 
 ### Download and Extract Data
 
+#### Python Package
+
+- No dependencies
+- Minimal python version should be 3.6
+
+```python
+from heisse_preise_data import download
+
+try:
+    raw = download()
+    print(json.dumps(raw, indent=2))
+except RuntimeError as e:
+    print(f"An error occurred: {e}")
+
+```
+
+```python
+from heisse_preise_data import download
+import pandas as pd
+
+try:
+    data = pd.DataFrame(download())
+    data.head(5)
+except RuntimeError as e:
+    print(f"An error occurred: {e}")
+```
+
 #### Python Example
 ```python
 import requests
@@ -78,6 +105,12 @@ https.get(url, (response) => {
 
 ## Contributing
 If you wish to contribute or improve the project, feel free to open an issue or submit a pull request.
+
+## Build
+
+```sh
+python -m build
+```
 
 ## License
 This project is licensed under the terms provided by the original data sources.
