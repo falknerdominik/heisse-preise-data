@@ -32,31 +32,27 @@ def download(url: str = LATEST_DOWNLOAD_URL) -> dict:
 
             # parse the tar structure manually - avoids dependecy
             buffer = BytesIO(decompressed_data)
-            while True:
-                header = buffer.read(512)
-                if len(header) < 512:
-                    break
+            header = buffer.read(512)
+            if len(header) < 512:
+                ValueError("Invalid tar file: missing header")
 
-                # get the file name from the header
-                name = header[:100].decode("utf-8").strip("\x00")
+            # get the file name from the header
+            name = header[:100].decode("utf-8").strip("\x00")
 
-                # get the file size from the header
-                size_field = header[124:136].decode("utf-8").strip("\x00").strip()
-                try:
-                    size = int(size_field, 8)
-                except ValueError:
-                    raise ValueError(f"Invalid size field in tar header: {size_field}")
+            # get the file size from the header
+            size_field = header[124:136].decode("utf-8").strip("\x00").strip()
+            try:
+                size = int(size_field, 8)
+            except ValueError:
+                raise ValueError(f"Invalid size field in tar header: {size_field}")
 
-                # check if the current file is the JSON file
-                json_filename = 'latest-canonical.json'
-                if name == json_filename:
-                    json_data = buffer.read(size)
-                    return json.loads(json_data)
+            # check if the current file is the JSON file
+            json_filename = 'latest-canonical.json'
+            if name == json_filename:
+                json_data = buffer.read(size)
+                return json.loads(json_data)
 
-                # Move to the next file in the tar structure
-                buffer.seek((size + 511) // 512 * 512, 1)
-
-            raise ValueError(f"{json_filename} not found in the archive.")
+            raise ValueError(f"{json_filename} not found, at the first data block, in the tar archive.")
 
     except urllib.error.URLError as e:
         raise RuntimeError(f'Encounter a problem downloading the data from {url}') from e
