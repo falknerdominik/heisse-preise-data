@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: >
+  If you use this software, please cite it using the following metadata.
+title: "heisse-preise-data"
+authors:
+  - family-names: "Falkner"
+    given-names: "Dominik"
+version: "1.0.2"
+date-released: "2025-01-11"
+url: "https://github.com/falknerdominik/heisse-preise-data"
+repository-code: "https://github.com/falknerdominik/heisse-preise-data"
+abstract: >
+  A Python package for downloading and extracting the data from heisse-preise.io
+  with no dependencies.
+keywords:
+  - data
+  - heisse-preise
+  - daily-updated
+  - compressed
+  - data-package
+license: "MIT"
